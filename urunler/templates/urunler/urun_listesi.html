@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ürün Listesi</title>
+    <!-- MDBootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css" rel="stylesheet">
+    <!-- Custom CSS for styling if needed -->
+    <style>
+        .product-card {
+            margin: 20px;
+            height: min-content;
+        }
+        .product-card img {
+            max-height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-5">
+    <h1 class="mb-4">Ürün Listesi</h1>
+
+    <!-- Arama Formu -->
+    <form class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Ürün adına göre ara..." name="q" value="{{ query }}">
+            <button class="btn btn-primary" type="submit">Ara</button>
+        </div>
+    </form>
+    {% if error %}
+        <p class="text-danger">{{ error }}</p>
+        
+    {% else %}
+        <div class="row">
+            {% for urun in page_obj.object_list %}
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                            <img src="{{ urun.image }}" class="img-fluid" alt="{{ urun.title }}">
+                            <a href="{{ urun.link }}">
+                                <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ urun.title }}</h5>
+                            <p class="card-text">{{ urun.description|safe }}</p>
+                            <p class="card-text"><strong>Fiyat: </strong>{{ urun.price }} TL</p>
+                            <p class="card-text"><strong>Kategori: </strong>{{ urun.category }}</p>
+                            <p class="card-text"><strong>SKU: </strong>{{ urun.sku }}</p>
+                            <a href="{{ urun.link }}" class="btn btn-primary">Detaylar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; İlk</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Sayfa {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Son &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+
+<!-- MDBootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"></script>
+</body>
+</html>
